@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Recommendation Wizard</title>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+     <script script type="text/javascript" language="javascript">
+
+$(document).ready(function(){
+    // $("button").click(function(){
+      $("form#myform").on('submit', function(event){
+          event.preventDefault();
+          console.log('form submitted')
+          console.log($(this));
+
+          button = $(this)
+          var button_url = button.attr("action");
+          var formData = $(this).serialize();
+          var editName = formData.substring(5)
+          var passMe = { 'rec' : editName};
+          
+          $.ajax({
+            url: 'http://127.0.0.1:5000/rec',
+            type: 'POST',
+            data: JSON.stringify(passMe, null, '\t'),
+            contentType: 'application/json;charset=UTF-8',
+          }).done(function(response){
+            var newtext = response["recommendation"];
+            $("#div1").replaceWith(newtext);
+            console.log(response);
+          }).error(function(response){
+            console.log("failed")
+          });
+
+    });
+});
+// });
+    </script>
+    <style>
+
+     body {
+       font-family: georgia;
+     }
+
+     h2 {
+       font-size: 1.5em;
+       margin: 60px 0 5px 0;
+       color: gray
+     }
+
+     .space {
+       margin-bottom: 20 px;
+     }
+
+     .wrapper {
+       width: 800px;
+       margin-left: auto;
+       margin-right: auto;
+       margin-bottom: 0px;
+     }
+
+     .bar {
+       fill: #FF75A3;
+     }
+
+     span {
+       color: blue;
+     }
+
+    </style>
+  </head>
+
+  <body>
+
+
+       <h2>Topic That You Like: 
+       <form id="myform" name="myform" action="/http://127.0.0.1:5000" method="post">
+             <input type="text" name="body" id="myVal"/>
+             <input name="submit"  type="submit" value="Submit" />
+         </form>
+       </h2>
+
+    </div>
+
+    <div id="div2"><h2>Topic We Recommend</h2></div>
+
+    <div id="div1"><h2> </h2></div>
+
+
+    <!-- Import the libraries: jQuery, d3 -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+
+  </body>
+</html>
